@@ -1,151 +1,103 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>หญ้าพันธุ์วัวชน - บ้านป่าพะยอม</title>
+  <meta charset="utf-8">
+  <title>Login RTSP</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
-      font-family: 'Prompt', sans-serif;
-      background-color: #f5f5f5;
-      color: #333;
-    }
-
-    header {
-      background-color: #2e7d32;
-      color: white;
-      padding: 20px;
-      text-align: center;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: 2rem;
-    }
-
-    nav {
-      background-color: #388e3c;
+      background: linear-gradient(135deg, #74ABE2, #5563DE);
+      height: 100vh;
       display: flex;
       justify-content: center;
+      align-items: center;
     }
-
-    nav a {
-      color: white;
-      padding: 15px 20px;
-      text-decoration: none;
-      display: inline-block;
-    }
-
-    nav a:hover {
-      background-color: #2e7d32;
-    }
-
     .container {
-      max-width: 1000px;
-      margin: 30px auto;
-      padding: 20px;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      background: #fff;
+      padding: 32px 40px;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      width: 100%;
+      max-width: 460px;
+      animation: fadeIn 0.6s ease;
     }
-
-    .product {
+    h1 {
+      margin: 0 0 24px;
+      text-align: center;
+      font-size: 22px;
+      color: #333;
+    }
+    form {
       display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
+      flex-direction: column;
+      gap: 16px;
     }
-
-    .product-item {
-      flex: 1 1 300px;
-      border: 1px solid #ddd;
-      padding: 15px;
+    label {
+      font-size: 14px;
+      color: #444;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+    input {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 14px;
+      border: 1px solid #ccc;
       border-radius: 8px;
-      background: #fafafa;
-      text-align: center;
+      transition: border-color 0.3s, box-shadow 0.3s;
     }
-
-    .product-item img {
-      max-width: 100%;
-      border-radius: 5px;
+    input:focus {
+      border-color: #5563DE;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(85,99,222,0.2);
     }
-
-    .btn {
-      margin-top: 10px;
-      padding: 10px 15px;
-      background-color: #43a047;
-      color: white;
+    button {
+      padding: 12px;
+      font-size: 15px;
+      font-weight: bold;
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
+      background: #5563DE;
+      color: #fff;
       cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
     }
-
-    .btn:hover {
-      background-color: #2e7d32;
+    button:hover {
+      background: #3d4aba;
+      transform: translateY(-2px);
     }
-
-    footer {
-      background-color: #2e7d32;
-      color: white;
-      text-align: center;
-      padding: 20px;
-      margin-top: 40px;
+    @keyframes fadeIn {
+      from {opacity:0; transform: translateY(-10px);}
+      to {opacity:1; transform: translateY(0);}
     }
   </style>
 </head>
 <body>
-
-  <header>
-    <h1>หญ้าพันธุ์วัวชน - บ้านป่าพะยอม พัทลุง</h1>
-    <p>จำหน่ายหญ้าพันธุ์คุณภาพ สำหรับวัวชนโดยเฉพาะ</p>
-  </header>
-
-  <nav>
-    <a href="#about">เกี่ยวกับเรา</a>
-    <a href="#products">สินค้าของเรา</a>
-    <a href="#contact">ติดต่อ</a>
-  </nav>
-
-  <div class="container" id="about">
-    <h2>เกี่ยวกับเรา</h2>
-    <p>เราคือกลุ่มเกษตรกรชุมชนบ้านป่าพะยอม จังหวัดพัทลุง ที่มีความเชี่ยวชาญในการปลูกหญ้าพันธุ์เฉพาะสำหรับวัวชน ไม่ใช้สารเคมี ดูแลอย่างพิถีพิถัน</p>
-  </div>
-
-  <div class="container" id="products">
-    <h2>สินค้าของเรา</h2>
-    <div class="product">
-      <div class="product-item">
-        <img src="https://via.placeholder.com/300x200.png?text=หญ้าเนเปียร์" alt="หญ้าเนเปียร์">
-        <h3>หญ้าเนเปียร์</h3>
-        <p>หญ้าคุณภาพสูง ช่วยเพิ่มพลังงานให้วัวชน</p>
-        <button class="btn" onclick="contact()">สั่งซื้อ</button>
+  <div class="container">
+    <h1>กรอกข้อมูล RTSP + เบอร์โทร</h1>
+    <form method="POST" action="{{ url_for('start') }}">
+      <div>
+        <label>RTSP Username</label>
+        <input name="username" required placeholder="admin" value="adminjelly">
       </div>
-      <div class="product-item">
-        <img src="https://via.placeholder.com/300x200.png?text=หญ้าแพงโกล่า" alt="หญ้าแพงโกล่า">
-        <h3>หญ้าแพงโกล่า</h3>
-        <p>อุดมด้วยโปรตีน เหมาะสำหรับวัวชนทุกวัย</p>
-        <button class="btn" onclick="contact()">สั่งซื้อ</button>
+      <div>
+        <label>RTSP Password</label>
+        <input type="password" name="password" required placeholder="••••••••" value="12345678">
       </div>
-    </div>
+      <div>
+        <label>IP Address</label>
+        <input name="ip" required placeholder="192.168.1.23" value="192.168.1.23">
+      </div>
+      <div>
+        <label>Phone Number</label>
+        <input name="phone" required placeholder="0640408778" value="0640408778">
+      </div>
+      <button type="submit">เข้าสู่ระบบ</button>
+    </form>
   </div>
-
-  <div class="container" id="contact">
-    <h2>ติดต่อเรา</h2>
-    <p>โทร: <a href="tel:0812345678">081-234-5678</a><br>
-       ไลน์: @cowgrasspaphayom<br>
-       Facebook: <a href="#">facebook.com/cowgrasspaphayom</a></p>
-    <button class="btn" onclick="contact()">แชทกับเรา</button>
-  </div>
-
-  <footer>
-    &copy; 2025 กลุ่มหญ้าวัวชน บ้านป่าพะยอม | พัทลุง
-  </footer>
-
-  <script>
-    function contact() {
-      alert("ขอบคุณที่สนใจ! กรุณาติดต่อเราทางโทรศัพท์หรือไลน์ได้เลยครับ :)");
-    }
-  </script>
-
 </body>
 </html>
