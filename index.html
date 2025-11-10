@@ -1,103 +1,468 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="utf-8">
-  <title>Login RTSP</title>
+  <meta charset="UTF-8" />
+  <title>Mini Padlet Board</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ฟอนต์และสไตล์พื้นฐาน -->
   <style>
     * {
       box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
     }
+
     body {
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
-      background: linear-gradient(135deg, #74ABE2, #5563DE);
-      height: 100vh;
+      padding: 0;
+      background: #f5f5fb;
       display: flex;
       justify-content: center;
-      align-items: center;
+      min-height: 100vh;
     }
+
     .container {
-      background: #fff;
-      padding: 32px 40px;
-      border-radius: 16px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
       width: 100%;
-      max-width: 460px;
-      animation: fadeIn 0.6s ease;
+      max-width: 960px;
+      padding: 24px 16px 48px;
     }
-    h1 {
-      margin: 0 0 24px;
-      text-align: center;
-      font-size: 22px;
-      color: #333;
-    }
-    form {
+
+    .board-header {
       display: flex;
-      flex-direction: column;
-      gap: 16px;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      gap: 12px;
     }
+
+    .board-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #222;
+    }
+
+    .board-subtitle {
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .badge {
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #ecebff;
+      color: #4b4acb;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 16px 18px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    }
+
+    .card + .card {
+      margin-top: 16px;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .form-row > * {
+      flex: 1 1 120px;
+    }
+
     label {
-      font-size: 14px;
-      color: #444;
-      margin-bottom: 6px;
-      font-weight: 500;
+      font-size: 0.85rem;
+      color: #555;
+      display: block;
+      margin-bottom: 4px;
     }
-    input {
+
+    input[type="text"],
+    textarea {
       width: 100%;
-      padding: 10px 12px;
-      font-size: 14px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      transition: border-color 0.3s, box-shadow 0.3s;
-    }
-    input:focus {
-      border-color: #5563DE;
+      border-radius: 12px;
+      border: 1px solid #d4d4f0;
+      padding: 8px 10px;
+      font-size: 0.9rem;
       outline: none;
-      box-shadow: 0 0 0 3px rgba(85,99,222,0.2);
+      transition: border 0.15s ease, box-shadow 0.15s ease;
+      background: #fafaff;
     }
+
+    input[type="text"]:focus,
+    textarea:focus {
+      border-color: #6366f1;
+      box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);
+      background: #ffffff;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 60px;
+      max-height: 200px;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
     button {
-      padding: 12px;
-      font-size: 15px;
-      font-weight: bold;
+      border-radius: 999px;
       border: none;
-      border-radius: 8px;
-      background: #5563DE;
-      color: #fff;
+      padding: 8px 16px;
+      font-size: 0.9rem;
       cursor: pointer;
-      transition: background 0.3s, transform 0.2s;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
-    button:hover {
-      background: #3d4aba;
-      transform: translateY(-2px);
+
+    .btn-primary {
+      background: linear-gradient(135deg, #4f46e5, #6366f1);
+      color: #fff;
+      box-shadow: 0 6px 16px rgba(79, 70, 229, 0.35);
     }
-    @keyframes fadeIn {
-      from {opacity:0; transform: translateY(-10px);}
-      to {opacity:1; transform: translateY(0);}
+
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #374151;
+    }
+
+    .btn-primary:active,
+    .btn-secondary:active {
+      transform: translateY(1px);
+      box-shadow: none;
+    }
+
+    .posts-wrapper {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .post-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 10px 12px;
+      box-shadow: 0 3px 12px rgba(15, 23, 42, 0.06);
+      position: relative;
+      overflow: hidden;
+      border-left: 4px solid #a5b4fc;
+    }
+
+    .post-name {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #111827;
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .post-time {
+      font-size: 0.75rem;
+      color: #9ca3af;
+    }
+
+    .post-text {
+      font-size: 0.9rem;
+      color: #374151;
+      white-space: pre-wrap;
+      margin-top: 2px;
+    }
+
+    .no-posts {
+      margin-top: 10px;
+      font-size: 0.85rem;
+      color: #9ca3af;
+      text-align: center;
+    }
+
+    .status {
+      margin-top: 8px;
+      font-size: 0.8rem;
+      color: #6b7280;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.12);
+    }
+
+    @media (max-width: 600px) {
+      .board-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>กรอกข้อมูล RTSP + เบอร์โทร</h1>
-    <form method="POST" action="{{ url_for('start') }}">
+    <!-- ส่วนหัวของบอร์ด -->
+    <div class="board-header">
       <div>
-        <label>RTSP Username</label>
-        <input name="username" required placeholder="admin" value="adminjelly">
+        <div class="board-title">STSU Idea Wall</div>
+        <div class="board-subtitle">
+          กระดานแชร์ความคิดแบบเรียลไทม์สำหรับห้องเรียน 🧠💬
+        </div>
       </div>
-      <div>
-        <label>RTSP Password</label>
-        <input type="password" name="password" required placeholder="••••••••" value="12345678">
+      <span class="badge">Mini Padlet</span>
+    </div>
+
+    <!-- ฟอร์มโพสต์ -->
+    <div class="card">
+      <form id="postForm">
+        <div class="form-row">
+          <div>
+            <label for="name">ชื่อเล่น / เลขที่</label>
+            <input
+              type="text"
+              id="name"
+              placeholder="เช่น แบงค์ / เลขที่ 12"
+              required
+            />
+          </div>
+          <div>
+            <label for="topic">หัวข้อ (ไม่บังคับ)</label>
+            <input
+              type="text"
+              id="topic"
+              placeholder="เช่น ความรู้สึกหลังเรียนวันนี้"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label for="message">ข้อความ / ความคิด</label>
+          <textarea
+            id="message"
+            placeholder="พิมพ์สิ่งที่อยากแชร์ที่นี่..."
+            required
+          ></textarea>
+        </div>
+
+        <div class="actions">
+          <button type="reset" class="btn-secondary">ล้างข้อความ</button>
+          <button type="submit" class="btn-primary">
+            + เพิ่มโพสต์
+          </button>
+        </div>
+
+        <div id="status" class="status">
+          <span class="status-dot"></span>
+          <span>กำลังเชื่อมต่อบอร์ด...</span>
+        </div>
+      </form>
+    </div>
+
+    <!-- รายการโพสต์ -->
+    <div class="card" style="margin-top: 16px">
+      <div style="font-weight: 600; margin-bottom: 8px; color: #111827">
+        โพสต์ล่าสุดบนบอร์ด
       </div>
-      <div>
-        <label>IP Address</label>
-        <input name="ip" required placeholder="192.168.1.23" value="192.168.1.23">
+      <div id="posts" class="posts-wrapper"></div>
+      <div id="noPosts" class="no-posts" style="display: none">
+        ยังไม่มีโพสต์ในบอร์ดนี้ ลองให้เด็กคนแรกพิมพ์ดูเลย ✨
       </div>
-      <div>
-        <label>Phone Number</label>
-        <input name="phone" required placeholder="0640408778" value="0640408778">
-      </div>
-      <button type="submit">เข้าสู่ระบบ</button>
-    </form>
+    </div>
   </div>
+
+  <!-- Firebase + Logic -->
+  <script type="module">
+    // ----------------------------
+    // 1) Import Firebase (แบบ v9 modular)
+    // ----------------------------
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      serverTimestamp,
+      onSnapshot,
+      query,
+      orderBy,
+    } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+    // ----------------------------
+    // 2) ตั้งค่า Firebase ของโปรเจกต์ตัวเอง
+    //    👉 ค่านี้ให้ไป copy จากหน้า Project Settings > General (Your Apps)
+    // ----------------------------
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      projectId: "YOUR_PROJECT_ID",
+      // ถ้าไม่มี field อื่น ๆ เช่น storageBucket ก็ไม่เป็นไร
+    };
+
+    // ----------------------------
+    // 3) เริ่มต้น Firebase & Firestore
+    // ----------------------------
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // เก็บโพสต์ใน collection ชื่อ "posts"
+    const postsCol = collection(db, "posts");
+
+    // ----------------------------
+    // 4) จัดการฟอร์ม
+    // ----------------------------
+    const postForm = document.getElementById("postForm");
+    const nameInput = document.getElementById("name");
+    const topicInput = document.getElementById("topic");
+    const messageInput = document.getElementById("message");
+    const postsEl = document.getElementById("posts");
+    const noPostsEl = document.getElementById("noPosts");
+    const statusEl = document.getElementById("status");
+
+    function setStatus(text, isOnline = true) {
+      statusEl.querySelector("span:nth-child(2)").textContent = text;
+      const dot = statusEl.querySelector(".status-dot");
+      if (isOnline) {
+        dot.style.background = "#10b981";
+        dot.style.boxShadow = "0 0 0 4px rgba(16,185,129,0.12)";
+      } else {
+        dot.style.background = "#f97316";
+        dot.style.boxShadow = "0 0 0 4px rgba(249,115,22,0.12)";
+      }
+    }
+
+    // ฟังก์ชันแปลง timestamp → string แบบอ่านง่าย
+    function formatDate(ts) {
+      if (!ts) return "";
+      const date = ts.toDate();
+      const d = date.toLocaleDateString("th-TH", {
+        day: "2-digit",
+        month: "short",
+      });
+      const t = date.toLocaleTimeString("th-TH", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+      return `${d} • ${t}`;
+    }
+
+    // ฟังก์ชันวาดโพสต์ 1 อัน
+    function createPostElement(doc) {
+      const data = doc.data();
+      const el = document.createElement("div");
+      el.className = "post-card";
+
+      const name = data.name || "ไม่ระบุชื่อ";
+      const topic = data.topic || "";
+      const text = data.message || "";
+      const timeStr = formatDate(data.createdAt);
+
+      el.innerHTML = `
+        <div class="post-name">
+          <span>${escapeHtml(name)}</span>
+          <span class="post-time">${timeStr}</span>
+        </div>
+        ${
+          topic
+            ? `<div style="font-size:0.8rem;color:#4b5563;margin-bottom:4px;">หัวข้อ: ${escapeHtml(
+                topic
+              )}</div>`
+            : ""
+        }
+        <div class="post-text">${escapeHtml(text)}</div>
+      `;
+
+      return el;
+    }
+
+    // ป้องกัน XSS เล็กน้อย
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // ----------------------------
+    // 5) Listener real-time: ดึงโพสต์เรียงจากใหม่ → เก่า
+    // ----------------------------
+    setStatus("กำลังเชื่อมต่อบอร์ด...");
+
+    const q = query(postsCol, orderBy("createdAt", "desc"));
+    onSnapshot(
+      q,
+      (snapshot) => {
+        postsEl.innerHTML = "";
+        if (snapshot.empty) {
+          noPostsEl.style.display = "block";
+        } else {
+          noPostsEl.style.display = "none";
+          snapshot.forEach((doc) => {
+            const el = createPostElement(doc);
+            postsEl.appendChild(el);
+          });
+        }
+        setStatus("ออนไลน์: เชื่อมต่อบอร์ดเรียลไทม์แล้ว ✅");
+      },
+      (error) => {
+        console.error("listen error:", error);
+        setStatus("เชื่อมต่อบอร์ดมีปัญหา ลองรีเฟรชหน้าเว็บอีกครั้ง", false);
+      }
+    );
+
+    // ----------------------------
+    // 6) เมื่อกด submit ฟอร์ม → เพิ่มโพสต์ใหม่ใน Firestore
+    // ----------------------------
+    postForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const name = nameInput.value.trim();
+      const topic = topicInput.value.trim();
+      const message = messageInput.value.trim();
+
+      if (!name || !message) {
+        alert("กรุณากรอกชื่อและข้อความก่อนโพสต์นะครับ 🙂");
+        return;
+      }
+
+      try {
+        setStatus("กำลังส่งโพสต์...");
+        await addDoc(postsCol, {
+          name,
+          topic,
+          message,
+          createdAt: serverTimestamp(),
+        });
+
+        // เคลียร์เฉพาะช่องข้อความ ให้ชื่อเดิมอยู่
+        messageInput.value = "";
+        // ถ้าอยากเคลียร์หัวข้อด้วย ให้ uncomment บรรทัดนี้
+        // topicInput.value = "";
+        messageInput.focus();
+        setStatus("ส่งโพสต์เรียบร้อย ✅");
+      } catch (err) {
+        console.error(err);
+        setStatus("ส่งโพสต์ไม่สำเร็จ ลองใหม่อีกครั้ง", false);
+        alert("มีปัญหาในการส่งโพสต์ ลองเช็คการตั้งค่า Firebase หรือลองใหม่อีกครั้ง");
+      }
+    });
+  </script>
 </body>
 </html>
